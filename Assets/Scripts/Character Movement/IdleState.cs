@@ -9,8 +9,8 @@ public class IdleState : IPlayerState
         this.m_playerMovementController = player;
     }
 
-    public void Enter() { }
-    public void Exit() { }
+    public void Enter() { Debug.Log($"Enter Idle state"); }
+    public void Exit() { Debug.Log($"Exit Idle state"); }
     public void Update()
     {
         // transition to jump
@@ -29,11 +29,7 @@ public class IdleState : IPlayerState
     }
     private void TryTransitionToWalkState()
     {
-        float velocityX = Mathf.Abs(m_playerMovementController.characterController.velocity.normalized.x);
-        float velocityZ = Mathf.Abs(m_playerMovementController.characterController.velocity.normalized.z); ;
-        float threshold = m_playerMovementController.movementTransitionThreshold;
-
-        if (velocityX > threshold || velocityZ > threshold)
+        if (m_playerMovementController.IsWalking())
         {
             m_playerMovementController.playerStateMachine.TransitionTo(m_playerMovementController.playerStateMachine.walkState);
         }
