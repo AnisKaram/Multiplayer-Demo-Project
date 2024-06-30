@@ -13,11 +13,9 @@ public class IdleState : IPlayerState
     public void Exit() { Debug.Log($"Exit Idle state"); }
     public void Update()
     {
-        // transition to jump
-        TryTransitionToJumpState();
-
-        // transition to walk
         TryTransitionToWalkState();
+
+        TryTransitionToJumpState();
     }
 
     private void TryTransitionToJumpState()

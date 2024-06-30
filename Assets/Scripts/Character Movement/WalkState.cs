@@ -13,10 +13,8 @@ public class WalkState : IPlayerState
     public void Exit() { Debug.Log($"Exit Walk state"); }
     public void Update()
     {
-        // transition to jump
         TryTransitionToJumpState();
 
-        // transition to idle
         TryTransitionToIdleState();
     }
 

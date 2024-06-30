@@ -13,16 +13,24 @@ public class JumpState : IPlayerState
     public void Exit() { Debug.Log($"Exit Jump state"); }
     public void Update()
     {
-        if (m_playerMovementController.isGrounded)
+        TransitionToWalkState();
+
+        TransitionToIdleState();
+    }
+
+    private void TransitionToWalkState()
+    {
+        if (m_playerMovementController.isGrounded && m_playerMovementController.IsWalking())
         {
-            if (m_playerMovementController.IsWalking()) // walk state
-            {
-                m_playerMovementController.playerStateMachine.TransitionTo(m_playerMovementController.playerStateMachine.walkState);
-            }
-            else // idle state
-            {
-                m_playerMovementController.playerStateMachine.TransitionTo(m_playerMovementController.playerStateMachine.idleState);
-            }
+            m_playerMovementController.playerStateMachine.TransitionTo(m_playerMovementController.playerStateMachine.walkState);
+        }
+    }
+
+    private void TransitionToIdleState()
+    {
+        if (m_playerMovementController.isGrounded && !m_playerMovementController.IsWalking())
+        {
+            m_playerMovementController.playerStateMachine.TransitionTo(m_playerMovementController.playerStateMachine.idleState);
         }
     }
 }
