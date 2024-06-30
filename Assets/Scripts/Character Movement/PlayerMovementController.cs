@@ -36,9 +36,6 @@ public class PlayerMovementController : MonoBehaviour
     }
     private void Update()
     {
-        // TODO 1. try to fix the isGrounded check: done
-        // TODO 2. add camera follow: done
-        // TODO 3. add player input script: done
         m_playerStateMachine.Update();
 
         UpdateIfGroundedOrNot();
