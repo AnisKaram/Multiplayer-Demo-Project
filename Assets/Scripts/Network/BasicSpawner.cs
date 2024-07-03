@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
     private NetworkRunner m_runner;
+    private PlayerRef m_thisPlayerRef;
 
     [SerializeField] private NetworkPrefabRef m_playerPrefab;
     private Dictionary<PlayerRef, NetworkObject> m_spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
@@ -55,6 +56,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
+        m_thisPlayerRef = player;
         if (runner.IsServer)
         {
             // create a unique position for the player
@@ -75,6 +77,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         {
             runner.Despawn(networkObject);
             m_spawnedCharacters.Remove(player);
+            Debug.Log("Player left");
         }
     }
 
@@ -97,7 +100,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     {}
 
 
-    async void StartGame(GameMode gameMode)
+    public async void StartGame(GameMode gameMode)
     {
         // create the fusion runner and let it know that we will be providing user input
         m_runner = gameObject.AddComponent<NetworkRunner>();
@@ -113,18 +116,10 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         });
     }
 
-    private void OnGUI()
+    public void DisconnectPlayer()
     {
-        if (m_runner == null)
-        {
-            if (GUI.Button(new Rect(0, 0, 200, 40), "Host"))
-            {
-                StartGame(GameMode.Host);
-            }
-            if (GUI.Button(new Rect(0, 40, 200, 40), "Join"))
-            {
-                StartGame(GameMode.Client);
-            }
-        }
+        m_runner.Shutdown();
+        //OnPlayerLeft(m_runner, m_thisPlayerRef);
+        Debug.Log($"{m_thisPlayerRef} Diconnected");
     }
 }
